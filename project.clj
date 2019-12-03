@@ -4,4 +4,5 @@
   :license {:name "EPL-2.0"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :plugins [[lein-kibit "0.1.6"]]
-  :dependencies [[org.clojure/clojure "1.10.0"]])
+  :dependencies [[org.clojure/clojure "1.10.0"]
+                 [org.clojure/math.numeric-tower "0.0.4"]])
