@@ -4,7 +4,7 @@ This is my code for the 2019 [Advent of Code](https://adventofcode.com/2019), al
 
 All code is under the `src` directory. Each solution-file is named `dayNN.clj` and contains both puzzle solutions for that day. These are the publically-facing functions `p01` and `p02`.
 
-The `data` directory contains the input data for each day. These files are prefixed with the day number, i.e., `NN_something.txt` where `NN` is the day number and the rest is a (semi-)descriptive name.
+The `data` directory contains the input data for each day. These files are prefixed with the day number, i.e., `NN_something.txt` where `NN` is the day number and the rest is a (semi-)descriptive name. (There is no data file for day 4.)
 
 ## Usage
 
