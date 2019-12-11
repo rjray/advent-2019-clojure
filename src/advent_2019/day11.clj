@@ -55,16 +55,9 @@
 (defn- update-state [state & params]
   (apply assoc (cons state params)))
 
+;; Abstract the setting of memory. Unnecessary, but was needed when debugging.
 (defn- update-memory [memory loc val]
   (assoc memory loc val))
-
-(defn- debug-op [name state len]
-  (let [pc  (:pc state)
-        mem (:memory state)]
-    (loop [cnt 0, ops ()]
-      (cond
-        (= cnt len) (println (str "PC=" pc " " name " " (reverse ops)))
-        :else       (recur (inc cnt) (cons (get mem (+ pc cnt)) ops))))))
 
 ;; Add operation.
 (defn- apply-add [state code]
@@ -229,7 +222,7 @@
 
 ;; Create a state to represent the robot at the very start
 (defn- create-robot-state []
-  {:direction "up", :visited (), :panels {}, :location (list 0 0)})
+  {:direction "up", :panels {}, :location (list 0 0)})
 
 ;; Table for "turning" the robot from it's current position based on the
 ;; specified direction.
@@ -239,34 +232,40 @@
    "down"  ["right" "left"],
    "left"  ["down" "up"]})
 
+;; Table for making a move, based on the current facing direction.
 (def ^:private move-map
   {"up"    (list 0 1),
    "right" (list 1 0),
    "down"  (list 0 -1),
    "left"  (list -1 0)})
 
+;; Turn the robot based on the current facing and the value of "turn".
 (defn- turn-robot [r turn]
   (update-state r :direction (get (turn-map (:direction r)) turn)))
 
+;; Move the robot one square, based on the current facing.
 (defn- move-robot [robot]
   (let [dir (:direction robot)
         cur (:location robot)
         new (map + cur (move-map dir))]
     (update-state robot :location new)))
 
+;; Update the robot-state for one move. Paint the current square based on the
+;; value of "paint", turn the robot, and move the robot after turning.
 (defn- update-robot [r paint turn]
   (let [{location :location,
-         visited :visited,
          panels :panels} r
         r' (move-robot (turn-robot r turn))]
-    (update-state r'
-                  :visited (cons location visited)
-                  :panels (assoc panels location paint))))
+    (update-state r' :panels (assoc panels location paint))))
 
+;; Get the panel color-value for the panel the robot is currently on.
 (defn- get-panel [robot]
   (let [{location :location, panels :panels} robot]
     (get panels location 0)))
 
+;; Run the machine until it halts or is blocked. If the key :mock is present,
+;; then don't actually run but rather take the next element from the mock-list
+;; and set that as the current output state.
 (defn- run-machine [machine input]
   (if (:mock machine)
     (if (empty? (:mock machine))
@@ -276,11 +275,16 @@
              :mock (rest (:mock machine))))
     (execute (add-input machine input))))
 
+;; Create a "mocked" machine by hard-coding the stream of output from the
+;; machine.
 (defn- create-mock-machine [m input]
   (assoc m :mock input))
 
+;; Mock-input for the simple example on the problem page.
 (def mock-input (quote ((1 0) (0 0) (1 0) (1 0) (0 1) (1 0) (1 0))))
 
+;; "Run" the robot by repeatedly running/polling the intcode machine until it has
+;; halted.
 (defn- run-robot [machine robot]
   (loop [robot robot, machine machine]
     (let [m'           (run-machine machine (get-panel robot))
@@ -291,6 +295,8 @@
         (:halted m') robot
         :else        (recur r' m')))))
 
+;; For visualizing the paint job, adjust all the points in panels by the offsets
+;; given as x and y. This moves all point coordinates to be >= 0.
 (defn- adjust-points [panels x y]
   (let [offset (list x y)]
     (reduce (fn [m p]
@@ -301,6 +307,7 @@
 (defn- display [lines]
   (println (str/join "\n" (map #(apply str %) lines))))
 
+;; Display the "code" that was painted on to the panels given in "panels".
 (defn- print-code [panels]
   (let [points (keys panels)
         off-x  (abs (apply min (map first points)))
