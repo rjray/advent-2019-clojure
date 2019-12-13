@@ -1,4 +1,5 @@
-(ns advent-2019.intcode)
+(ns advent-2019.intcode
+  (:require [clojure.string :as str]))
 
 ;;; Separating out the IntCode machine into its own usable component.
 
@@ -88,7 +89,9 @@
          output :output} state
         [_ m1]           code
         out              (read-value memory base (inc pc) m1)]
-    (update-state state :output (concat output (list out)) :pc (+ pc 2))))
+    (if (fn? output)
+      (update-state (output state out) :pc (+ pc 2))
+      (update-state state :output (concat output (list out)) :pc (+ pc 2)))))
 
 ;; Jump-if-true operation. If the value indicated by the first argument is
 ;; non-zero, then move the PC to the value indicated by the second argument.
@@ -154,14 +157,38 @@
         op1          (read-value memory base (inc pc) m1)]
     (update-state state :pc (+ pc 2) :base (+ base op1))))
 
+;; Code just for debugging
+
+(defn- print-machine-code [state code cmd]
+  (let [prefix (str (format "(PC=%4d, OP=%5d) " (:pc state) cmd))
+        op     (first code)]
+    (cond
+      (= op 99) (println (str prefix "halt           "))
+      (= op 1)  (println (str prefix "add            "))
+      (= op 2)  (println (str prefix "mult           "))
+      (= op 3)  (println (str prefix "input          "))
+      (= op 4)  (println (str prefix "output         "))
+      (= op 5)  (println (str prefix "jump-if-true   "))
+      (= op 6)  (println (str prefix "jump-if-false  "))
+      (= op 7)  (println (str prefix "less-than      "))
+      (= op 8)  (println (str prefix "equals         "))
+      (= op 9)  (println (str prefix "adjust-base    "))
+      :else     (println ""))))
+
+;; End of debugging-only code
+
 ;; Make a completely new VM state with the given opcode/memory stream.
 ;; Everything else defaults to 0/empty/false.
-(defn initialize-machine [memory]
-  {:memory (reduce (fn [m p] (apply assoc (cons m p)))
-                   {} (map-indexed (fn [x y] (list x y)) memory)),
-   :pc 0, :base 0,
-   :input (), :output (),
-   :blocked false, :halted false})
+(defn initialize-machine [memory & flags]
+  (let [flags (reduce (fn [m [k v]]
+                        (assoc m k v))
+                      {} (partition 2 flags))]
+    (merge {:memory (reduce (fn [m p] (apply assoc (cons m p)))
+                            {} (map-indexed (fn [x y] (list x y)) memory)),
+            :pc 0, :base 0,
+            :input (), :output (),
+            :blocked false, :halted false, :debugging false}
+           flags)))
 
 ;; Execute the VM over the opcodes/data, input, etc. encapsulated within the
 ;; given state. When opcode 99 is reached, returns the current state with the
@@ -171,7 +198,9 @@
     (let [{memory :memory
            pc :pc} state
           code     (split-opcode (memory pc))
-          op       (first code)]
+          op       (first code)
+          _        (if (:debugging state)
+                     (print-machine-code state code (memory pc)))]
       (cond
         (:blocked state) state
         (= op 99)        (update-state state :halted true)
