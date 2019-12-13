@@ -92,7 +92,7 @@
         [_ p1im p2im]    code
         op1              (ops (inc pc))
         op2              (ops (+ pc 2))
-        newpc            (if (not (zero? (if p1im op1 (ops op1))))
+        newpc            (if-not (zero? (if p1im op1 (ops op1)))
                            (if p2im op2 (ops op2)) (+ pc 3))]
     (make-state ops input output newpc)))
 

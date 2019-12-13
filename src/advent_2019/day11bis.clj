@@ -104,7 +104,7 @@
 
 ;; Display the "raster lines" of the image.
 (defn- display [lines]
-  (println (str/join "\n" (map #(apply str %) lines))))
+  (println (str/join "\n" (map str/join lines))))
 
 ;; Display the "code" that was painted on to the panels given in "panels".
 (defn- print-code [panels]
