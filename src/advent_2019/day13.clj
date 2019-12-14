@@ -12,14 +12,18 @@
        (re-seq #"-?\d+")
        (map #(Long/parseLong %))))
 
+;; A collection of refs that will persist over the life of the game.
 (def ^:private output (ref ()))
 (def ^:private screen (ref {}))
 (def ^:private score (ref 0))
 (def ^:private ball-x (ref 0))
 (def ^:private paddle-x (ref 0))
 
+;; Vector of the characters used to display the current state of the screen.
 (def ^:private tiles [" " "#" "*" "-" "."])
 
+;; Output callback for the intcode machine. This consumes the input (one element
+;; at a time) and when there are three acts on it as needed.
 (defn- consume-output [state out]
   (let [cur-output @output
         cur-output (cons out cur-output)]
@@ -37,6 +41,7 @@
       (dosync (ref-set output cur-output)))
     state))
 
+;; Only used for debugging-- dump the current state of the screen.
 (defn- show-screen []
   (let [grid   @screen
         points (keys grid)
@@ -49,8 +54,13 @@
                        field points)]
     (println (str/join "\n" (map #(apply str %) field)))))
 
+;; Choose a direction to move the paddle in, based on the current relative X
+;; values of the ball and the paddle.
 (defn- choose-direction [] (compare @ball-x @paddle-x))
 
+;; Play the game. Given an initialized machine, loop until it halts and report
+;; the final score. Each iteration, if it is blocked on input then set the
+;; input based on the direction the paddle should be moved in.
 (defn- play-game [machine]
   (loop [m machine]
     (cond
