@@ -17,7 +17,7 @@
     (reduce (fn [f p]
               (if (= "#" (last p))
                 (conj f (list (first p) y)) f))
-            field (map-indexed (fn [x y] (list x y)) chars))))
+            field (map-indexed list chars))))
 
 ;; Create the whole field from the sequence of lines.
 (defn- create-field [lines]
@@ -29,17 +29,17 @@
 ;; Determine which quadrant (1-4) the asteroid in question is in, based on the
 ;; signs of the deltas.
 (defn- get-quadrant [dx dy]
-  (if (< dx 0)
-    (if (< dy 0) 1 3)
-    (if (< dy 0) 2 4)))
+  (if (neg? dx)
+    (if (neg? dy) 1 3)
+    (if (neg? dy) 2 4)))
 
 ;; Calculate the slope, quadrant and distance for the two asteroids given.
 (defn- calc-slope-and-quad [[x1 y1] [x2 y2]]
   (let [dx (- x2 x1)
         dy (- y2 y1)]
     (cond
-      (zero? dx) (list (if (< dy 0) "-inf" "inf") "-" (abs dy))
-      (zero? dy) (list (if (< dx 0) "-0" "0") "-" (abs dx))
+      (zero? dx) (list (if (neg? dy) "-inf" "inf") "-" (abs dy))
+      (zero? dy) (list (if (neg? dx) "-0" "0") "-" (abs dx))
       :else      (let [quad  (get-quadrant dx dy)
                        slope (/ dy dx)
                        dist  (Math/sqrt (+ (* dx dx) (* dy dy)))]

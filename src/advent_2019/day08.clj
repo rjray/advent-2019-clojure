@@ -30,7 +30,7 @@
 
 ;; For a stack of values, get the first non-transparent value. This is the first
 ;; non-2 value.
-(defn- get-value [stack] (first (filter #(not (= 2 %)) stack)))
+(defn- get-value [stack] (first (filter #(not= 2 %) stack)))
 
 ;; Turn the zeros to " " and the ones to "*", so that it's easier to read when
 ;; printed out.
@@ -40,7 +40,7 @@
 ;; Display the "raster lines" of the image.
 (defn- display [lines]
   (let [lines (map zero-to-spc lines)]
-    (println (str/join "\n" (map #(apply str %) lines)))))
+    (println (str/join "\n" (map #(str/join %) lines)))))
 
 ;; Decode the image data into layers, which become stacks of (0|1|2), which then
 ;; become pixels that are one of [0,1]. The sequence of pixels are then
@@ -49,7 +49,7 @@
   (let [layer-size (* x y)
         layers     (map vec (partition layer-size data))
         stacks     (map #(get-vals layers %) (range layer-size))
-        pixels     (map #(get-value %) stacks)]
+        pixels     (map get-value stacks)]
     (display (partition x pixels))))
 
 ;;; Problem 1

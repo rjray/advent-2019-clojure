@@ -13,7 +13,7 @@
 ;; Borrowed from
 ;; https://github.com/salokristian/advent-of-code-2019/, common.clj.
 (defn- find-pred [pred x]
-  (some #(if (pred %) % nil) x))
+  (some #(when (pred %) %) x))
 
 ;; Much of the following adapted from/inspired by
 ;; https://github.com/salokristian/advent-of-code-2019/, day_14.clj

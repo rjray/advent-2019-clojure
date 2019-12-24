@@ -13,17 +13,19 @@
 ;; Convert [y x] to a position in 0..24.
 (defn- getpos [y x] (+ x (* y 5)))
 
+;; Count the number of bugs adjacent to the given location.
 (defn- adjacent [b y x]
   (apply + (for [move [[-1 0] [1 0] [0 -1] [0 1]]]
              (let [[dy dx] (map + [y x] move)
                    pos     (getpos dy dx)]
                (cond
-                 (or (< dx 0)
+                 (or (neg? dx)
                      (> dx 4)
-                     (< dy 0)
+                     (neg? dy)
                      (> dy 4)) 0
                  :else         (b pos))))))
 
+;; "Advance" the board one iteration.
 (defn- advance-board [board]
   (vec (for [y (range 5), x (range 5)]
          (let [pos (getpos y x)
@@ -36,6 +38,7 @@
                   (not= adj 1)) 0
              :else              at)))))
 
+;; Find the first board configuration that repeats.
 (defn- find-repeating [board]
   (loop [board board, seen #{}]
     (cond
@@ -75,15 +78,15 @@
     0
     (+ (cond
          (and (= y 2)
-              (= x 1)) (apply + (map #(b %) (list 0 5 10 15 20)))
+              (= x 1)) (apply + (map b (list 0 5 10 15 20)))
          (and (= y 2)
-              (= x 3)) (apply + (map #(b %) (list 4 9 14 19 24)))
+              (= x 3)) (apply + (map b (list 4 9 14 19 24)))
          :else         0)
        (cond
          (and (= y 1)
-              (= x 2)) (apply + (map #(b %) (range 5)))
+              (= x 2)) (apply + (map b (range 5)))
          (and (= y 3)
-              (= x 2)) (apply + (map #(b %) (range 20 25)))
+              (= x 2)) (apply + (map b (range 20 25)))
          :else         0))))
 
 ;; Calculate the adjacency score for [y x] on board b. Do this by doing the

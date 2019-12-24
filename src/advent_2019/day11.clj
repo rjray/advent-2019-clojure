@@ -212,7 +212,7 @@
 ;; Get the output value at the head of the output list. Throws an exception if
 ;; there is no output available.
 (defn- get-output [state]
-  (if (empty? (:output state)) nil (first (:output state))))
+  (when (seq (:output state)) (first (:output state))))
 
 ;; Drop the head of the output list (presumably after it has just been read).
 (defn- drop-output [state]
@@ -305,7 +305,7 @@
 
 ;; Display the "raster lines" of the image.
 (defn- display [lines]
-  (println (str/join "\n" (map #(apply str %) lines))))
+  (println (str/join "\n" (map #(str/join %) lines))))
 
 ;; Display the "code" that was painted on to the panels given in "panels".
 (defn- print-code [panels]

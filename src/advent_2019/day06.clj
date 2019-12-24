@@ -62,8 +62,7 @@
         (let [cur-dist   (dists current)
               candidates (sets/intersection unvisited (set (graph current)))
               new-dists  (reduce (fn [ds node]
-                                   (assoc ds
-                                          node (min (ds node) (inc cur-dist))))
+                                   (update-in ds [node] min (inc cur-dist)))
                                  dists candidates)
               new-unvis  (disj unvisited current)
               new-cur    (first (sort #(compare (new-dists %1)

@@ -52,7 +52,7 @@
                          (let [[x y] p]
                            (assoc-in f [y x] (tiles (grid p)))))
                        field points)]
-    (println (str/join "\n" (map #(apply str %) field)))))
+    (println (str/join "\n" (map #(str/join %) field)))))
 
 ;; Choose a direction to move the paddle in, based on the current relative X
 ;; values of the ball and the paddle.
@@ -74,12 +74,11 @@
                       (read-opcodes $)
                       (ic/initialize-machine $ :output consume-output)
                       (ic/execute $))]
-    (do
-      (show-screen)
-      (as-> @screen $
-        (vals $)
-        (frequencies $)
-        ($ 2)))))
+    (show-screen)
+    (as-> @screen $
+      (vals $)
+      (frequencies $)
+      ($ 2))))
 
 ;;; Problem 2
 (defn p02 [file]

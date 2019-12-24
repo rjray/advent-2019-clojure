@@ -226,7 +226,7 @@
 ;; Get the output value at the head of the output list. Throws an exception if
 ;; there is no output available.
 (defn get-output [state]
-  (when-not (empty? (:output state)) (first (:output state))))
+  (when (seq (:output state)) (first (:output state))))
 
 ;; Drop the head of the output list (presumably after it has just been read).
 (defn drop-output [state]

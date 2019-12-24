@@ -60,7 +60,7 @@
 
 ;; A slightly-modified "stuff-input" that deals with a vector of lists.
 (defn- stuff-inputs-nat [m v]
-  (stuff-input m (apply concat (map rest v))))
+  (stuff-input m (mapcat rest v)))
 
 ;; "Send" the NAT values to machine 0.
 (defn- apply-nat [mv nat]
@@ -73,7 +73,7 @@
     (cond
       (and (>= (count traffic) 2)
            (repeat? traffic))        (first traffic)
-      (and (not (empty? nat))
+      (and (seq nat)
            (network-idle? machines)) (recur (apply-nat machines nat)
                                             ()
                                             (cons (last nat) traffic))

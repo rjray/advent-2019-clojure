@@ -55,13 +55,12 @@
                        (list :down :up :left :right))
         loc    (first (filter #(Character/isUpperCase (get-in field %))
                               (keys around)))]
-    (if loc
+    (when loc
       (case (around loc)
         :up    (str (get-in field (mapv + loc [-1 0])) (get-in field loc))
         :down  (str (get-in field loc) (get-in field (mapv + loc [1 0])))
         :left  (str (get-in field (mapv + loc [0 -1])) (get-in field loc))
-        :right (str (get-in field loc) (get-in field (mapv + loc [0 1]))))
-      nil)))
+        :right (str (get-in field loc) (get-in field (mapv + loc [0 1])))))))
 
 ;; Get the portals in the field.
 (defn- get-portals [field]
@@ -91,7 +90,7 @@
         moves+portal (if (portals pos)
                        (cons (portals pos) basic-moves)
                        basic-moves)
-        all-moves    (filter #(not (seen %)) moves+portal)]
+        all-moves    (remove seen moves+portal)]
     (map #(hash-map :key (inc dist) :data (list % (conj seen %))) all-moves)))
 
 ;; Get the shortest path from AA to ZZ.
@@ -183,10 +182,9 @@
       (if (empty? queue)
         "failed"
         (let [[[pos lvl dist] & queue'] queue]
-          ;;(prn pos lvl dist)
           (cond
             (and (= pos end)
-                 (= lvl 0))  dist
+                 (zero? 0))  dist
             :else
             (let [new-moves (find-moves' field w h portmap seen pos lvl)]
               (recur (concat queue' (map #(concat % (list (inc dist)))

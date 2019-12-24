@@ -1,4 +1,5 @@
-(ns advent-2019.day16)
+(ns advent-2019.day16
+  (:require [clojure.string :as str]))
 
 ;;; https://adventofcode.com/2019/day/16
 
@@ -24,7 +25,7 @@
 (defn- calc-op [op input]
   (let [pattern (mapcat #(repeat op %) base-pattern)
         stream  (cycle pattern)]
-    (num-chr (last (str (reduce +' (map (fn [a b] (* a b))
+    (num-chr (last (str (reduce +' (map *
                                         input (rest stream))))))))
 
 ;; Run a single phase of the FFT process on the input in "signal". Use the
@@ -61,7 +62,7 @@
 ;; the input by reading the first seven digits as an offset and dropping that
 ;; many off the front of the lazy-seq before running the calculations.
 (defn- run-full-fft [phases signal]
-  (let [offset (Integer/parseInt (apply str (take 7 signal)))
+  (let [offset (Integer/parseInt (str/join (take 7 signal)))
         input  (drop offset (apply concat (repeat 10000 signal)))]
     (loop [input input, phase 0]
       (cond

@@ -35,7 +35,7 @@
 ;; "camera". (Note that as currently written this will likely fail if made
 ;; part of the part 2 effort.)
 (defn- find-intersections []
-  (let [fieldv (vec (filter #(pos? (count %)) @field))]
+  (let [fieldv (filterv #(pos? (count %)) @field)]
     (for [y (range 1 (dec (count fieldv))),
           x (range 1 (dec (count (fieldv 0))))
           :when (and (= (get-in fieldv [y x]) \#)
@@ -81,11 +81,10 @@
   (let [state (reduce (fn [s v]
                         (ic/add-input s v))
                       state (map int (seq program)))]
-    (do
-      ;; When it runs, it'll "display" the field again, but once done the last
-      ;; line of @field will hold the answer.
-      (ic/execute state)
-      (last @field))))
+    ;; When it runs, it'll "display" the field again, but once done the last
+    ;; line of @field will hold the answer.
+    (ic/execute state)
+    (last @field)))
 
 ;;; Problem 2
 (defn p02 [file]

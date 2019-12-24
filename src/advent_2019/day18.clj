@@ -98,9 +98,8 @@
             :else
             (recur (reduce h/insert
                            heap'
-                           (apply concat
-                                  (map #(search-nodes bots graph ks dist %)
-                                       bots)))
+                           (mapcat #(search-nodes bots graph ks dist %)
+                                   bots))
                    (assoc dists node dist))))))))
 
 ;; For modifying the field for part 2, this locates a given character in the
