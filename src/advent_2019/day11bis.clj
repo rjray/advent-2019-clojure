@@ -6,14 +6,6 @@
 ;;; Day 11 code with the IntCode machine completely ripped out and put into its
 ;;; own module/namespace.
 
-;; Read the given file as a stream of comma-separated data values. Return a
-;; vector of the numerical values.
-(defn- read-opcodes [file]
-  (->> file
-       (slurp)
-       (re-seq #"-?\d+")
-       (map #(Long/parseLong %))))
-
 ;; Create a state to represent the robot at the very start
 (defn- create-robot-state []
   {:direction "up", :panels {}, :location (list 0 0)})
@@ -125,18 +117,21 @@
 
 ;;; Problem 1
 (defn p01 [file]
-  (as-> file $
-    (read-opcodes $)
-    (ic/initialize-machine $)
-    ;;(create-mock-machine $ mock-input)
-    (run-robot $ (create-robot-state))
-    (count (keys (:panels $)))))
+  (-> file
+      ic/read-opcodes
+      ic/initialize-machine
+      ;;(create-mock-machine $ mock-input)
+      (run-robot (create-robot-state))
+      :panels
+      keys
+      count))
 
 ;;; Problem 2
 (defn p02 [file]
-  (as-> file $
-    (read-opcodes $)
-    (ic/initialize-machine $)
-    ;;(create-mock-machine $ mock-input)
-    (run-robot $ (update-state (create-robot-state) :panels {(list 0 0) 1}))
-    (print-code (:panels $))))
+  (-> file
+      ic/read-opcodes
+      ic/initialize-machine
+      ;;(create-mock-machine $ mock-input)
+      (run-robot (update-state (create-robot-state) :panels {(list 0 0) 1}))
+      :panels
+      print-code))
