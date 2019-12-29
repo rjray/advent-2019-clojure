@@ -4,14 +4,6 @@
 
 ;;; Clean-up and hopefully improvements.
 
-;; Read the given file as a stream of comma-separated data values. Return a
-;; vector of the numerical values.
-(defn- read-opcodes [file]
-  (->> file
-       (slurp)
-       (re-seq #"-?\d+")
-       (map #(Long/parseLong %))))
-
 ;; The complete game state in a ref that can be persisted throughout the run.
 (def ^:private
   game-state (ref {:output (), :screen {}, :score 0, :ball-x 0, :paddle-x 0 }))
@@ -67,20 +59,20 @@
 
 ;;; Problem 1
 (defn p01 [file]
-  (let [final-state (as-> file $
-                      (read-opcodes $)
-                      (ic/initialize-machine $ :output consume-output)
-                      (ic/execute $))]
-    (show-screen)
-    (as-> @screen $
-      (vals $)
-      (frequencies $)
-      ($ 2))))
+  (let [final-state (-> file
+                        ic/read-opcodes
+                        (ic/initialize-machine :output consume-output)
+                        ic/execute)]
+    (-> (:screen @game-state)
+        vals
+        frequencies
+        (get 2))))
 
 ;;; Problem 2
 (defn p02 [file]
-  (let [initial-state (as-> file $
-                        (read-opcodes $)
-                        (cons 2 (rest $))
-                        (ic/initialize-machine $ :output consume-output))]
+  (let [initial-state (-> file
+                          ic/read-opcodes
+                          rest
+                          (conj 2)
+                          (ic/initialize-machine :output consume-output))]
     (play-game initial-state)))
