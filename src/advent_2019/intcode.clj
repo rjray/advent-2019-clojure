@@ -231,3 +231,11 @@
 ;; Drop the head of the output list (presumably after it has just been read).
 (defn drop-output [state]
   (update-in state [:output] rest))
+
+;; Read the given file as a stream of comma-separated data values. Return a
+;; sequence of the numerical values.
+(defn read-opcodes [file]
+  (->> file
+       (slurp)
+       (re-seq #"-?\d+")
+       (map #(Long/parseLong %))))
