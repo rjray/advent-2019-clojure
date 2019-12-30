@@ -183,8 +183,7 @@
   (let [flags (reduce (fn [m [k v]]
                         (assoc m k v))
                       {} (partition 2 flags))]
-    (merge {:memory (reduce (fn [m p] (apply assoc (cons m p)))
-                            {} (map-indexed (fn [x y] (list x y)) memory)),
+    (merge {:memory (into {} (map-indexed hash-map memory)),
             :pc 0, :base 0,
             :input (), :output (),
             :blocked false, :halted false, :debugging false}
@@ -218,6 +217,10 @@
                                       "\nPC: " pc
                                       "\nOriginal mem val: " (memory pc)
                                       "\nState: " (dissoc state :memory))))))))
+
+;; Patch the memory for the given locations.
+(defn patch [state & pairs]
+  (update-state state :memory (apply assoc (cons (:memory state) pairs))))
 
 ;; Add an input value to the given state. Adds it at the end of the input list.
 (defn add-input [state val]
