@@ -72,9 +72,7 @@
 ;; it. If it doesn't send the vac-u-bot drifting into space, then the last line
 ;; of output in @field will be the desired answer.
 (defn- visit-all [state]
-  (let [state (reduce (fn [s v]
-                        (ic/add-input s v))
-                      state (map int (seq program)))]
+  (let [state (apply ic/add-input (cons state (map int (seq program))))]
     ;; When it runs, it'll "display" the field again, but once done the last
     ;; line of @field will hold the answer.
     (ic/execute state)

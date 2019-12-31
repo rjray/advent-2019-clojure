@@ -10,8 +10,7 @@
 (defn p01 [file]
   (-> file
       ic/read-opcodes
-      ic/initialize-machine
-      (ic/add-input 1)
+      (ic/initialize-machine :input (list 1))
       ic/execute
       :output))
 
@@ -19,7 +18,6 @@
 (defn p02 [file]
   (-> file
       ic/read-opcodes
-      ic/initialize-machine
-      (ic/add-input 5)
+      (ic/initialize-machine :input (list 5))
       ic/execute
       :output))

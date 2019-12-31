@@ -25,9 +25,7 @@
 ;; buffer. Add a 10 on the end for the newline, to avoid having to include it
 ;; on every line.
 (defn- send-line [m line]
-  (reduce (fn [s c]
-            (ic/add-input s c))
-          m (conj (mapv int (seq line)) 10)))
+  (apply ic/add-input (cons m (concat (map int (seq line)) (list 10)))))
 
 ;; Apply the above fn over a list of lines, returning the resulting machine
 ;; state.

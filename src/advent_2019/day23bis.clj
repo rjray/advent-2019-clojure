@@ -21,7 +21,7 @@
 
 ;; Stuff a list of input into the given machine.
 (defn- stuff-input [machine input]
-  (reduce (fn [m v] (ic/add-input m v)) machine input))
+  (apply ic/add-input (cons machine input)))
 
 ;; Part 1-- run the machines in a loop until the first "packet" headed for
 ;; address 255 is detected.

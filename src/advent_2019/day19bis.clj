@@ -9,9 +9,7 @@
 ;; changes for a given (x y), so we can use memoize to speed this up.
 (def is-affected
   (memoize (fn [m x y]
-             (ic/get-output (ic/execute (reduce (fn [m i]
-                                                  (ic/add-input m i))
-                                                m (list x y)))))))
+             (ic/get-output (ic/execute (ic/add-input m x y))))))
 
 ;; A boolean predicate based on the above, for cases where we need true/false
 ;; rather than 1/0.

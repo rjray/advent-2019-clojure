@@ -223,8 +223,8 @@
   (update-state state :memory (apply assoc (cons (:memory state) pairs))))
 
 ;; Add an input value to the given state. Adds it at the end of the input list.
-(defn add-input [state val]
-  (assoc (update-in state [:input] concat (list val)) :blocked false))
+(defn add-input [state & input]
+  (assoc (update-in state [:input] concat input) :blocked false))
 
 ;; Get the output value at the head of the output list. Throws an exception if
 ;; there is no output available.
