@@ -67,7 +67,7 @@
 
 ;; For part 1: Simulate the moon motion over the specified number of iterations.
 ;; When done, calculate the total energy over the list of moons.
-(defn- simulate-motion [iters moons]
+(defn- simulate-motion [moons iters]
   (loop [moons moons, iter 0]
     (if (= iter iters)
       (calculate-answer moons)
@@ -89,16 +89,16 @@
 
 ;;; Problem 1
 (defn p01 [file iters]
-  (->> file
-       (read-lines)
-       (get-moon-positions)
-       (create-moons)
-       (simulate-motion iters)))
+  (-> file
+      read-lines
+      get-moon-positions
+      create-moons
+      (simulate-motion iters)))
 
 ;;; Problem 2
 (defn p02 [file]
-  (->> file
-       (read-lines)
-       (get-moon-positions)
-       (create-moons)
-       (find-repeat-point)))
+  (-> file
+      read-lines
+      get-moon-positions
+      create-moons
+      find-repeat-point))
