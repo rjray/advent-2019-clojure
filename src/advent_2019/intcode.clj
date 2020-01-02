@@ -1,5 +1,4 @@
-(ns advent-2019.intcode
-  (:require [clojure.string :as str]))
+(ns advent-2019.intcode)
 
 ;;; Separating out the IntCode machine into its own usable component.
 
