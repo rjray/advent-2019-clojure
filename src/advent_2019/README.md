@@ -114,7 +114,7 @@ Very little significant clean-up done this time, aside from using the module ver
 
 ## day18.clj
 
-Day 18 (NA/NA). The first of three days in which I was unable to finish either part of the day within the first 24 hours. This was a case where part 1 was *significantly* more difficult than part 2 was; once I had part 1 done, modifying it to handle the 4-way split for part 2 was actually pretty simple. But getting the right kind of searching for part 1 took f-ing forever.
+Day 18 (2563/2105). The first of three days in which I was unable to finish either part of the day within the first 24 hours. This was a case where part 1 was *significantly* more difficult than part 2 was; once I had part 1 done, modifying it to handle the 4-way split for part 2 was actually pretty simple. But getting the right kind of searching for part 1 took f-ing forever.
 
 ## day19.clj
 
@@ -126,7 +126,7 @@ Nothing big changed, just pulled out `read-opcodes`.
 
 ## day20.clj
 
-Day 20 (NA/NA). Another day that took more than a day to finish. Part 1 wasn't too hard, but part 2 really stumped me for a while. I ended up completely re-imagining the solution, only to decide that I could have done part 1 in roughly the same way which would have made solving part 2 a lot faster. This is another case where there is very little shared code between the two halves of the day.
+Day 20 (3133/2622). Another day that took more than a day to finish. Part 1 wasn't too hard, but part 2 really stumped me for a while. I ended up completely re-imagining the solution, only to decide that I could have done part 1 in roughly the same way which would have made solving part 2 a lot faster. This is another case where there is very little shared code between the two halves of the day.
 
 ## day21.clj
 
@@ -138,7 +138,7 @@ Mostly similar changes as the last few IntCode days (`read-opcodes`, `->` vs. `-
 
 ## day22.clj
 
-Day 22 (NA/NA). The last of the really hard days. I might have gotten at least part 1 done within 24 hours, but I was traveling to another state during most of the period which threw off my timing. This was another case of part 1 being perfectly do-able with a direct (i.e., brute-force) approach while part 2 was so not. Getting part 2 required some major hints from reddit. I also ended up having to get a Clojure version of "modular exponentiation", to avoid overflowing even the bigint support.
+Day 22 (4029/1967). The last of the really hard days. I might have gotten at least part 1 done within 24 hours, but I was traveling to another state during most of the period which threw off my timing. This was another case of part 1 being perfectly do-able with a direct (i.e., brute-force) approach while part 2 was so not. Getting part 2 required some major hints from reddit. I also ended up having to get a Clojure version of "modular exponentiation", to avoid overflowing even the bigint support.
 
 ## day23.clj
 
